@@ -1,6 +1,6 @@
 syntax = "proto3" ;
 
-package pb.inventory.v1;
+package inventory.v1;
 import "google/protobuf/timestamp.proto";
 import "google/protobuf/wrappers.proto";
 import "google/protobuf/empty.proto";
