@@ -1,0 +1,38 @@
+syntax = "proto3";
+
+package payment.v1;
+
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/wrappers.proto";
+import "google/protobuf/empty.proto";
+option go_package = "github.com/sssmilar/microservices-course-examples/Loms/shared/proto/payment/v1;payment_v1";
+
+service PayOrderService {
+  //processing payment command and returns transaction uuid
+  rpc PayOrder(PayOrderRequest) returns (PayOrderResponse) ;
+}
+message PayOrderResponse {
+  //UUID of the transaction payment
+  string transaction_uuid = 1 ;
+
+}
+message PayOrderRequest {
+  // UUID of the order
+  string  order_uuid = 1 ;
+  //UUID of the user who initializes the payment
+  string  user_uuid = 2 ;
+  //Selected payment method
+  PaymentMethod payment_method = 3 ;
+}
+enum PaymentMethod {
+  //Unknown payment method
+  UNKNOWN = 0 ;
+  //bank card
+  CARD = 1 ;
+  //fast payment system
+  SBP = 2 ;
+  //credit card
+  CREDIT_CARD = 3 ;
+  //investor money
+  INVESTOR_MONEY = 4 ;
+}
