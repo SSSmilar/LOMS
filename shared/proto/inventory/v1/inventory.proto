@@ -5,7 +5,7 @@ import "google/protobuf/timestamp.proto";
 import "google/protobuf/wrappers.proto";
 import "google/protobuf/empty.proto";
 
-option go_package = "github.com/sssmilar/microservices-course-examples/spacecraft-fabric/shared/proto/inventory/v1;inventory_v1";
+option go_package = "github.com/sssmilar/microservices-course-examples/Loms/shared/proto/inventory/v1;inventory_v1";
 
 service InventoryService {
   //returns list of details with the possibility of filtering
