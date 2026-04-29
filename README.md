@@ -10,7 +10,46 @@
 * **Инфраструктура:** Docker, Nginx (API Gateway)
 * **Observability:** OpenTelemetry, Jaeger (трейсинг), Prometheus + Grafana (метрики)
 * **Тулзы:** Taskfile, golangci-lint, Protobuf
+```mermaid
+flowchart LR
+%% Клиент и API Gateway
+    Client((Client))
+    Ngix{"Ngix"}
 
+%% Микросервисы (с указанием используемых БД)
+    IAM["IAM Service<br/>(PostgreSQL, Redis)"]
+    Order["Order Service<br/>(PostgreSQL)"]
+    Payment["Payment Service"]
+    Inventory["Inventory Service<br/>(PostgreSQL)"]
+    Assembly["Assembly Service"]
+
+%% Брокер сообщений
+    Kafka{{"Kafka"}}
+
+%% Роутинг от Ngix
+    Client --> Ngix
+    Ngix -- gRPC --> IAM
+    Ngix -- HTTP --> Order
+    Ngix -- gRPC --> Inventory
+
+%% Внутренние взаимодействия от Order Service
+    Order -- gRPC --> Payment
+    Order -- gRPC --> Inventory
+    Order --> Kafka
+
+%% Взаимодействие через Kafka
+    Kafka --> Assembly
+
+%% Инфраструктура мониторинга (изолированный блок, как на схеме)
+    subgraph Observability ["Логирование, метрики, трассировка"]
+        direction LR
+        Kibana
+        OpenTelemetry
+        Prometheus
+        Grafana
+        Jaeger
+    end
+```
 ## Структура (Monorepo)
 * `order/` — оркестратор. Принимает HTTP, дергает другие сервисы по gRPC, пушит ивенты в Kafka.
 * `inventory/` — склад. Резервирование товаров и работа с БД.
